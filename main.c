@@ -36,8 +36,14 @@
 // If rdrand fails, retry this many times
 static const int RETRY_COUNT = 10;
 
-// 1022 calls to 64-bit rdrand is guaranteed to include a reseed.
-#define RANDOM_COUNT 1022
+// >1022 calls to 64-bit rdrand is guaranteed to include a reseed.
+// https://software.intel.com/en-us/articles/intel-digital-random-number-generator-drng-software-implementation-guide
+//   "The DRBG autonomously decides when it needs to be reseeded to refresh the
+//   random number pool in the buffer and is both unpredictable and transparent
+//   to the RDRAND caller. An upper bound of 511 128-bit samples will be
+//   generated per seed. That is, no more than 511*2=1022 sequential DRNG
+//   random numbers will be generated from the same seed value."
+#define RANDOM_COUNT 1024
 
 // The seed is 256 bits, so that's the amount of actual entropy we're adding
 static const int ENTROPY_INCREMENT = 256;
