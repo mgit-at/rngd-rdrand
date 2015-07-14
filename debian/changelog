@@ -1,0 +1,5 @@
+rngd-rdrand (0.1) unstable; urgency=medium
+
+  * Initial release.
+
+ -- Christoph Hack <chack@mgit.at>  Tue, 14 Jul 2015 17:56:14 +0200

@@ -1,0 +1,9 @@
+[Unit]
+Description=Simple rngd to feed /dev/random
+
+[Service]
+ExecStart=/usr/bin/rngd-rdrand
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
