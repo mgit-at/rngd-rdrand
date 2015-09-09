@@ -1,3 +1,9 @@
+rngd-rdrand (1.0) stable; urgency=medium
+
+  * check for cpu flags
+
+ -- Christoph Hack <chack@mgit.at>  Wed, 09 Sep 2015 14:13:00 +0200
+
 rngd-rdrand (0.1) unstable; urgency=medium
 
   * Initial release.
