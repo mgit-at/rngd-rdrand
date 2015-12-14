@@ -24,13 +24,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <errno.h>
 #include <string.h>
 #include <poll.h>
-#include <syslog.h>
 #include <linux/random.h>
 
 // If rdrand fails, retry this many times
@@ -72,7 +68,7 @@ static inline void fill_random_buf(uint64_t *buf)
     }
     // Keeping a counter and checking later takes a branch out of the inner loop
     if (goodcalls < RANDOM_COUNT) {
-        syslog(LOG_ERR, "rdrand failed %d times", RANDOM_COUNT - goodcalls);
+        fprintf(stderr, "Error: rdrand failed %d times\n", RANDOM_COUNT - goodcalls);
         exit(1);
     }
 }
@@ -88,8 +84,7 @@ static void send_entropy(int fd)
     entropy.size = RANDOM_COUNT * sizeof(uint64_t);
     fill_random_buf(entropy.buf);
     if (ioctl(fd, RNDADDENTROPY, &entropy) != 0) {
-        syslog(LOG_ERR, "failed to add entropy: %s", strerror(errno));
-        exit(errno);
+        perror("failed to add entropy");
     }
     memset(entropy.buf, 0, RANDOM_COUNT * sizeof(uint64_t));
     // Tell gcc that buf is used, so it doesn't optimize away the memset
@@ -102,17 +97,14 @@ int main(int argc, char **argv)
     int ent_count;
     struct pollfd pfd;
 
-    openlog("rngd-rdrand", LOG_PERROR | LOG_PID, LOG_DAEMON);
-    syslog(LOG_INFO, "Starting");
+    fprintf(stderr, "Starting\n");
     random_fd = open("/dev/random", O_RDWR);
     if (random_fd == -1) {
-        syslog(LOG_ERR, "Failed to open /dev/random: %s", strerror(errno));
-        exit(errno);
+        perror("Failed to open /dev/random");
     }
     urandom_fd = open("/dev/urandom", O_RDWR);
     if (urandom_fd == -1) {
-        syslog(LOG_ERR, "Failed to open /dev/urandom: %s", strerror(errno));
-        exit(errno);
+        perror("Failed to open /dev/urandom");
     }
 
     pfd.fd = random_fd;
@@ -125,8 +117,7 @@ int main(int argc, char **argv)
                  ent_count < FILL_WATERMARK);
         send_entropy(urandom_fd);
         if (poll(&pfd, 1, MAX_SLEEP) == -1) {
-            syslog(LOG_ERR, "poll failed: %s", strerror(errno));
-            exit(errno);
+            perror("poll failed");
         }
     }
 
