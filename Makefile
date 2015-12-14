@@ -15,7 +15,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # This -march is pretty safe since no archs lower than this have rdrand
-CFLAGS = -std=gnu99 -march=core-avx-i -O3
+CFLAGS = -std=gnu99 -march=core-avx-i -O3 -Wall -Werror
 rngd-rdrand: main.o
 	$(CC) $(LDFLAGS) -o $@ $<
 
