@@ -1,3 +1,9 @@
+rngd-rdrand (1.1) stable; urgency=medium
+
+  * remove syslog usage, depend on journal, cleanup includes
+
+ -- Michael Gebetsroither <mgebetsroither@mgit.at>  Mon, 14 Dec 2015 18:18:01 +0100
+
 rngd-rdrand (1.0) stable; urgency=medium
 
   * check for cpu flags
