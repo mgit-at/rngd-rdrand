@@ -2,7 +2,7 @@
 Description=Simple rngd to feed /dev/random
 
 [Service]
-ExecStartPre=/bin/grep rdrand /proc/cpuinfo
+ExecStartPre=/bin/grep -q -l rdrand /proc/cpuinfo
 ExecStart=/usr/bin/rngd-rdrand
 Restart=on-abort
 
