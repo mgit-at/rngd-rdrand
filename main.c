@@ -56,11 +56,16 @@ int main(int argc, char **argv)
     int ent_count;
     struct pollfd pfd;
 
-    struct entropy (*get_entropy)(void) = get_entropy_rdrand;
+    struct entropy (*get_entropy)(void) = NULL;
 
-    if (!has_rdrand()) {
-        error(EXIT_FAILURE, 0, "This CPU does not support RDRAND");
-    }
+    if (has_rdseed()) {
+        fprintf(stderr, "CPU has RDSEED support\n");
+        get_entropy = get_entropy_rdseed;
+    } else if (has_rdrand()) {
+        fprintf(stderr, "CPU has RDRAND support\n");
+        get_entropy = get_entropy_rdrand;
+    } else
+        error(EXIT_FAILURE, 0, "This CPU supports neither RDSEED nor RDRAND");
 
     fprintf(stderr, "Starting\n");
     random_fd = open("/dev/random", O_RDWR);

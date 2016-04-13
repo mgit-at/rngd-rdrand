@@ -13,3 +13,4 @@ struct entropy {
 };
 
 struct entropy get_entropy_rdrand(void);
+struct entropy get_entropy_rdseed(void);

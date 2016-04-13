@@ -25,3 +25,9 @@ bool has_rdrand(void) {
 
     return (cpuid_rdrand.ecx & (1 << 29)) != 0;
 }
+
+bool has_rdseed(void) {
+    struct cpuid cpuid_rdrand = cpuid(7);
+
+    return (cpuid_rdrand.ebx & (1 << 17)) != 0;
+}
