@@ -30,6 +30,8 @@
 #include <poll.h>
 #include <linux/random.h>
 
+#include "cpuid.h"
+
 // If rdrand fails, retry this many times
 static const int RETRY_COUNT = 10;
 
@@ -92,33 +94,13 @@ static void send_entropy(int fd)
     asm ("" : : "m" (entropy.buf[0]) : "memory" );
 }
 
-struct cpuid {
-  uint32_t eax;
-  uint32_t ebx;
-  uint32_t ecx;
-  uint32_t edx;
-};
-
-static struct cpuid cpuid(uint i) {
-    struct cpuid cpuid;
-    asm volatile ("cpuid" : "=a" (cpuid.eax),
-                            "=b" (cpuid.ebx),
-                            "=c" (cpuid.ecx),
-                            "=d" (cpuid.edx)
-                          : "a" (i), "c" (0));
-
-    return cpuid;
-}
-
 int main(int argc, char **argv)
 {
     int random_fd, urandom_fd;
     int ent_count;
     struct pollfd pfd;
 
-    struct cpuid cpuid_rdrand = cpuid(1);
-
-    if ((cpuid_rdrand.ecx & (1 << 29)) == 0) {
+    if (!has_rdrand()) {
         error(EXIT_FAILURE, 0, "This CPU does not support RDRAND");
     }
 
