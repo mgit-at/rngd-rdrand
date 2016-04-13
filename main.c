@@ -71,8 +71,8 @@ static inline void fill_random_buf(uint64_t *buf)
     }
     // Keeping a counter and checking later takes a branch out of the inner loop
     if (goodcalls < RANDOM_COUNT) {
-        fprintf(stderr, "Error: rdrand failed %d times\n", RANDOM_COUNT - goodcalls);
-        exit(1);
+        error(EXIT_FAILURE, 0,
+              "Error: rdrand failed %d times\n", RANDOM_COUNT - goodcalls);
     }
 }
 
