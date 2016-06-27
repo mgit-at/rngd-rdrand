@@ -1,5 +1,7 @@
 # rgnd-rdrand
 
+[![Build Status](https://travis-ci.org/mgit-at/rngd-rdrand.svg?branch=master)](https://travis-ci.org/mgit-at/rngd-rdrand)
+
 A simple rngd to collect entropy from Intel's Bull Mountain hwrng using the
 `rdrand` instruction and feed it to the kernel's /dev/random pool.
 
