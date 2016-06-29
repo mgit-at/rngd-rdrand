@@ -16,8 +16,8 @@
 
 # This -march is pretty safe since no archs lower than this have rdrand
 CFLAGS = -std=gnu99 -march=core-avx-i -O3 -Wall -Werror
-rngd-rdrand: main.o
-	$(CC) $(LDFLAGS) -o $@ $<
+rngd-rdrand: main.o cpuid.o rdrand.o rdseed.o
+	$(CC) $(LDFLAGS) -o $@ $^
 
 install:
 	install -D -m 0755 rngd-rdrand $(DESTDIR)/usr/bin/rngd-rdrand
