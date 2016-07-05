@@ -26,4 +26,4 @@ deb:
 	debuild -I -us -uc
 
 clean:
-	rm -f main.o rngd-rdrand
+	rm -f main.o cpudi.o rdrand.o rdseed.o rngd-rdrand
