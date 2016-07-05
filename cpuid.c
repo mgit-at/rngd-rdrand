@@ -23,11 +23,11 @@ static inline struct cpuid cpuid(uint i) {
 bool has_rdrand(void) {
     struct cpuid cpuid_rdrand = cpuid(1);
 
-    return (cpuid_rdrand.ecx & (1 << 29)) != 0;
+    return (cpuid_rdrand.ecx & (1 << 30)) != 0;
 }
 
 bool has_rdseed(void) {
-    struct cpuid cpuid_rdrand = cpuid(7);
+    struct cpuid cpuid_rdseed = cpuid(7);
 
-    return (cpuid_rdrand.ebx & (1 << 17)) != 0;
+    return (cpuid_rdseed.ebx & (1 << 18)) != 0;
 }
