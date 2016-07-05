@@ -7,6 +7,9 @@
 // Number of samples to obtain
 #define RANDOM_COUNT 128
 
+// If rdseed fails, retry this many times
+#define RETRY_COUNT 64
+
 // The samples are supposedly independent:
 // we get n bits of entropy in an n-bit sample.
 static const int ENTROPY_INCREMENT = 64 * RANDOM_COUNT;

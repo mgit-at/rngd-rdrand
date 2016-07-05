@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+// If rdrand fails, retry this many times
+#define RETRY_COUNT 10;
+
 // >1022 calls to 64-bit rdrand is guaranteed to include a reseed.
 // https://software.intel.com/en-us/articles/intel-digital-random-number-generator-drng-software-implementation-guide
 //   "The DRBG autonomously decides when it needs to be reseeded to refresh the
