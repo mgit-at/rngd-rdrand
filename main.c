@@ -10,7 +10,7 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -29,6 +29,7 @@
 #include <string.h>
 #include <poll.h>
 #include <linux/random.h>
+#include <unistd.h>
 
 #include "cpuid.h"
 #include "rand.h"
@@ -50,6 +51,24 @@ static void send_entropy(struct entropy (*get_entropy)(void), int fd)
     asm ("" : : "m" (entropy.buf[0]) : "memory" );
 }
 
+static void print_entropy(struct entropy (*get_entropy)(void))
+{
+    struct entropy entropy = get_entropy();
+
+    for(int i = 0;;) {
+      int w = write(1, &(entropy.buf[i]), entropy.size-i);
+      if(w<0) {
+        perror("failed to write entropy");
+      }
+      i+=w;
+      if(i >= entropy.size)
+        break;
+    }
+    memset(entropy.buf, 0, BUFFER_SIZE * sizeof(uint64_t));
+    // Tell gcc that buf is used, so it doesn't optimize away the memset
+    asm ("" : : "m" (entropy.buf[0]) : "memory" );
+}
+
 int main(int argc, char **argv)
 {
     int random_fd, urandom_fd;
@@ -64,8 +83,16 @@ int main(int argc, char **argv)
     } else if (has_rdrand()) {
         fprintf(stderr, "CPU has RDRAND support\n");
         get_entropy = get_entropy_rdrand;
-    } else
+    } else {
         error(EXIT_FAILURE, 0, "This CPU supports neither RDSEED nor RDRAND");
+    }
+
+
+    if(argc > 1) {
+      while(1) {
+        print_entropy(get_entropy);
+      }
+    }
 
     fprintf(stderr, "Starting\n");
     random_fd = open("/dev/random", O_RDWR);
