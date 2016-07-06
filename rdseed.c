@@ -22,12 +22,12 @@ static inline void fill_random_buf(uint64_t *buf)
         register int counter = RETRY_COUNT;
         register uint64_t val asm ("rcx");
         asm volatile ("1:\t"
-                      "dec %0\n\t"
+                      "dec %1\n\t"
                       "je 2f\n\t"
                       ".byte	0x48,0x0f,0xc7,0xf9\n\t"   // rdseed %rcx
                       "jnc 1b\n\t"
                       "2:\t"
-                      "adc $0,%1" : "+g" (counter), "+g" (goodcalls) : : "cc");
+                      "adc $0,%2" : "=r" (val), "+g" (counter), "+g" (goodcalls) : : "cc");
         buf[i] = val;
     }
     // Keeping a counter and checking later takes a branch out of the inner loop
