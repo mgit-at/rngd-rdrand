@@ -1,5 +1,9 @@
 #include <stdint.h>
 
+#if !defined(__x86_64__)
+#error "This only works on 64bit x86 processors!"
+#endif
+
 // Size of the entropy buffer
 #define BUFFER_SIZE 1024
 
