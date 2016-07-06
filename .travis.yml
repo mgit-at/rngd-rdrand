@@ -21,4 +21,8 @@ addons:
       - clang-3.6
       - clang-3.8
 
-script: make
+script:
+  - $CC -march=native -v -Q --help=target
+  - $CC -march=core-avx-i -v -Q --help=target
+  - $CC -march=broadwell -v -Q --help=target
+  - make
